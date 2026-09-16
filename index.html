@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" />
+    <title>TrustGrid — Enterprise B2B KYC & Identity Verification</title>
+    <meta
+      name="description"
+      content="Bank-grade B2B KYC verification, automated document extraction, compliance scoring, and secure identity infrastructure for modern enterprises."
+    />
+    <meta name="author" content="TrustGrid" />
+    <meta property="og:title" content="TrustGrid — Enterprise KYC & Identity Verification" />
+    <meta
+      property="og:description"
+      content="Automated KYC, OCR document extraction, and trust intelligence for procurement and compliance."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <script>
+      const storedTheme = localStorage.getItem("theme");
+      const preferDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+      const theme =
+        storedTheme === "dark" || storedTheme === "light"
+          ? storedTheme
+          : preferDark
+            ? "dark"
+            : "light";
+      document.documentElement.classList.add(theme);
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
