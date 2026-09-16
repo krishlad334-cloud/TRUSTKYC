@@ -259,7 +259,7 @@ export default function Landing() {
                 {/* Header */}
                 <div className="mb-6">
                   <h2 className="text-xl font-bold font-display text-foreground tracking-tight">
-                    Sign in to TrustGrid
+                    Sign in to TrustKYC
                   </h2>
                   <p className="text-xs text-muted-foreground mt-1">
                     Select a workspace role to access the interactive demo.
@@ -562,7 +562,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <CompanyLogo size="sm" to="/" />
             <span className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} TrustGrid Technologies. All rights reserved.
+              © {new Date().getFullYear()} TrustKYC Technologies. All rights reserved.
             </span>
           </div>
 

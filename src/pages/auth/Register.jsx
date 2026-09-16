@@ -134,7 +134,7 @@ export default function Register() {
 
     const doc = new jsPDF();
     doc.setFontSize(22);
-    doc.text("TrustGrid — Business Registration Summary", 20, 20);
+    doc.text("TrustKYC — Business Registration Summary", 20, 20);
 
     doc.setFontSize(11);
     doc.text("Generated: " + new Date().toLocaleString(), 20, 30);
@@ -158,7 +158,7 @@ export default function Register() {
       y += 10;
     });
 
-    doc.save(`${form.businessName.replace(/\s+/g, "_") || "trustgrid"}-onboarding-summary.pdf`);
+    doc.save(`${form.businessName.replace(/\s+/g, "_") || "trustkyc"}-onboarding-summary.pdf`);
     toast.success("Registration summary downloaded as PDF");
   };
 
@@ -208,7 +208,7 @@ export default function Register() {
             </h2>
 
             <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
-              Create your corporate TrustGrid identity. Seamlessly onboard compliance officers,
+              Create your corporate TrustKYC identity. Seamlessly onboard compliance officers,
               upload GSTN/MCA artifacts, and underwrite trust with verified counterparties.
             </p>
           </div>
@@ -233,7 +233,7 @@ export default function Register() {
         {/* Testimonial Quote */}
         <div className="p-4 rounded-2xl border border-border bg-muted/30 relative z-10 text-xs text-muted-foreground">
           <p className="italic leading-relaxed">
-            &ldquo;TrustGrid reduced our supplier onboarding timeline from 7 business days to under
+            &ldquo;TrustKYC reduced our supplier onboarding timeline from 7 business days to under
             15 minutes with complete audit readiness.&rdquo;
           </p>
           <div className="mt-3 font-semibold text-foreground">
@@ -275,7 +275,7 @@ export default function Register() {
                 Register your business
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                Complete the two steps below to register your corporate profile on TrustGrid.
+                Complete the two steps below to register your corporate profile on TrustKYC.
               </p>
             </div>
 
@@ -561,7 +561,7 @@ export default function Register() {
             </div>
 
             <p className="text-center text-xs text-muted-foreground">
-              By creating an account, you agree to TrustGrid&apos;s Terms of Service and Privacy
+              By creating an account, you agree to TrustKYC&apos;s Terms of Service and Privacy
               Policy.
             </p>
           </div>

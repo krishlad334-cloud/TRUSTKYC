@@ -28,8 +28,8 @@ export default function AdminAudit() {
   useEffect(() => {
     fetchAuditLogs();
     const handleUpdate = () => fetchAuditLogs();
-    window.addEventListener("trustgrid:data_update", handleUpdate);
-    return () => window.removeEventListener("trustgrid:data_update", handleUpdate);
+    window.addEventListener("trustkyc:data_update", handleUpdate);
+    return () => window.removeEventListener("trustkyc:data_update", handleUpdate);
   }, []);
 
   const filtered = useMemo(() => {

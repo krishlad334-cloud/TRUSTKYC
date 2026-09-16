@@ -234,7 +234,7 @@ export default function ResetPassword() {
 
           <div className="text-center mt-6">
             <p className="text-xs text-muted-foreground">
-              TrustGrid Identity Protection • Single Sign-On Ready
+              TrustKYC Identity Protection • Single Sign-On Ready
             </p>
           </div>
         </div>

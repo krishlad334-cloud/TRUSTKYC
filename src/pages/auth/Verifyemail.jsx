@@ -80,7 +80,7 @@ export default function VerifyEmail() {
                 </h2>
 
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                  Validating your cryptographic verification token against the TrustGrid identity
+                  Validating your cryptographic verification token against the TrustKYC identity
                   registry…
                 </p>
               </div>
@@ -143,7 +143,7 @@ export default function VerifyEmail() {
 
           <div className="text-center mt-6">
             <p className="text-xs text-muted-foreground">
-              TrustGrid Compliance & Verification Network
+              TrustKYC Compliance & Verification Network
             </p>
           </div>
         </div>

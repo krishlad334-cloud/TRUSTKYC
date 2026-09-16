@@ -41,7 +41,7 @@ export default function AdminUsers() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="font-medium text-foreground">
-                      {usr.businessName || "TrustGrid Operations"}
+                      {usr.businessName || "TrustKYC Operations"}
                     </div>
                     <div className="text-[11px] text-muted-foreground">{usr.title}</div>
                   </td>

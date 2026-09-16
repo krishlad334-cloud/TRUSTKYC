@@ -4,7 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 import CompanyLogo from "../components/ui/CompanyLogo";
 
-export default function DocumentationLayout() {
+export default function DocumentationLayout({ children }) {
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, user } = useAuth();
 
@@ -58,15 +58,11 @@ export default function DocumentationLayout() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8">
-        <Outlet />
-      </main>
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8">{children || <Outlet />}</main>
 
       {/* Footer */}
       <footer className="border-t border-border py-6 px-4 text-center text-xs text-muted-foreground">
-        <p>
-          TrustGrid™ B2B KYC & Identity Verification Network — 100% Static Frontend Architecture
-        </p>
+        <p>TrustKYC™ B2B KYC & Identity Verification Network — 100% Static Frontend Architecture</p>
       </footer>
     </div>
   );

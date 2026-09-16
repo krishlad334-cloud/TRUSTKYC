@@ -247,14 +247,14 @@ export default function DocumentationPage() {
   // Inspect live browser localStorage
   const refreshStorageStats = () => {
     const keys = [
-      "trustgrid_user",
-      "trustgrid_token",
-      "trustgrid_theme",
-      "trustgrid_businesses",
-      "trustgrid_documents",
-      "trustgrid_deals",
-      "trustgrid_audit_logs",
-      "trustgrid_notifications",
+      "trustkyc_demo_auth_user",
+      "trustkyc_demo_auth_role",
+      "theme",
+      "trustkyc_demo_businesses",
+      "trustkyc_demo_documents",
+      "trustkyc_demo_deals",
+      "trustkyc_demo_audit_logs",
+      "trustkyc_demo_notifications",
     ];
     const info = keys.map((k) => {
       const raw = localStorage.getItem(k);
@@ -368,7 +368,7 @@ export default function DocumentationPage() {
               <ShieldCheck className="size-3.5" /> 100% Frontend-Only Static Architecture
             </div>
             <h1 className="text-3xl font-bold font-display text-foreground">
-              TrustGrid Platform Documentation
+              TrustKYC Platform Documentation
             </h1>
             <p className="mt-1 text-sm text-muted-foreground max-w-3xl">
               Complete architectural, operational, and development specification covering all 25
@@ -508,9 +508,9 @@ export default function DocumentationPage() {
               <SectionHeader
                 id="sec-1-intro"
                 num={1}
-                title="Introduction to TrustGrid"
+                title="Introduction to TrustKYC"
                 icon={BookOpen}
-                desc="Comprehensive architectural blueprint and operational handbook for TrustGrid's B2B Trust Verification System."
+                desc="Comprehensive architectural blueprint and operational handbook for TrustKYC's B2B Trust Verification System."
               />
 
               <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
@@ -523,7 +523,7 @@ export default function DocumentationPage() {
                   entities, delayed vendor accreditations, and unverified financial backgrounds.
                 </p>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  <strong>TrustGrid</strong> solves this by establishing a decentralized,
+                  <strong>TrustKYC</strong> solves this by establishing a decentralized,
                   authoritative KYC registry and commercial deal arbitration platform. Entities
                   upload statutory documents (GSTIN REG-06, PAN, MCA CIN, Bank Statements), undergo
                   simulated OCR extraction and compliance officer verification, and receive a
@@ -702,7 +702,7 @@ export default function DocumentationPage() {
                 num={4}
                 title="100% Frontend Static Architecture"
                 icon={ServerOff}
-                desc="Zero server dependencies: How TrustGrid runs autonomously in the browser."
+                desc="Zero server dependencies: How TrustKYC runs autonomously in the browser."
               />
 
               <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
@@ -713,7 +713,7 @@ export default function DocumentationPage() {
                         <th className="px-4 py-3 font-semibold">Architectural Layer</th>
                         <th className="px-4 py-3 font-semibold">Traditional Backend Approach</th>
                         <th className="px-4 py-3 font-semibold text-primary">
-                          TrustGrid Static Demo Architecture
+                          TrustKYC Static Demo Architecture
                         </th>
                       </tr>
                     </thead>
@@ -742,7 +742,7 @@ export default function DocumentationPage() {
                           WebSocket / Socket.io server daemon
                         </td>
                         <td className="px-4 py-3 text-emerald-600 font-bold">
-                          DOM CustomEvents (trustgrid:data_update)
+                          DOM CustomEvents (trustkyc:data_update)
                         </td>
                       </tr>
                       <tr>
@@ -1125,14 +1125,15 @@ export default function DocumentationPage() {
                     <span className="font-bold text-primary">2. In-Memory Resolution</span>
                     <p className="text-muted-foreground font-sans">
                       Matched against static user list. Generates a deterministic bearer token (
-                      <code className="font-mono">tg-demo-token-...</code>).
+                      <code className="font-mono">tkyc-demo-token-...</code>).
                     </p>
                   </div>
                   <div className="p-3 rounded-xl bg-muted/40 border border-border space-y-1">
                     <span className="font-bold text-primary">3. Session Sync</span>
                     <p className="text-muted-foreground font-sans">
-                      Stores user payload into <code className="font-mono">trustgrid_user</code> and
-                      sets token in <code className="font-mono">trustgrid_token</code>.
+                      Stores user payload into{" "}
+                      <code className="font-mono">trustkyc_demo_auth_user</code> and sets role in{" "}
+                      <code className="font-mono">trustkyc_demo_auth_role</code>.
                     </p>
                   </div>
                   <div className="p-3 rounded-xl bg-muted/40 border border-border space-y-1">
@@ -1650,7 +1651,7 @@ export default function DocumentationPage() {
                 <p>
                   Accessible at{" "}
                   <code className="text-primary font-mono font-bold">/admin/dashboard</code>, this
-                  console gives compliance officers supervisory oversight over the entire TrustGrid
+                  console gives compliance officers supervisory oversight over the entire TrustKYC
                   network.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -1846,7 +1847,7 @@ export default function DocumentationPage() {
 
               <div className="rounded-2xl border border-border bg-card p-6 space-y-4 text-xs text-muted-foreground">
                 <p>
-                  B2B transactions in TrustGrid are tracked as verified deals (
+                  B2B transactions in TrustKYC are tracked as verified deals (
                   <code className="text-primary font-mono font-bold">/business/deals</code>). Each
                   deal includes milestone deliverables, currency values in INR, delivery schedules,
                   and payment terms.
@@ -1992,19 +1993,19 @@ export default function DocumentationPage() {
                           <td className="px-4 py-2 text-foreground font-semibold">{k.count}</td>
                           <td className="px-4 py-2 text-muted-foreground">{k.bytes}</td>
                           <td className="px-4 py-2 font-sans text-muted-foreground">
-                            {k.key === "trustgrid_user"
+                            {k.key === "trustkyc_demo_auth_user"
                               ? "Authenticated user persona"
-                              : k.key === "trustgrid_token"
-                                ? "Bearer JWT demo authorization token"
-                                : k.key === "trustgrid_theme"
+                              : k.key === "trustkyc_demo_auth_role"
+                                ? "RBAC security scope / role"
+                                : k.key === "theme"
                                   ? "Light / dark theme state"
-                                  : k.key === "trustgrid_businesses"
+                                  : k.key === "trustkyc_demo_businesses"
                                     ? "Registered enterprise nodes"
-                                    : k.key === "trustgrid_documents"
+                                    : k.key === "trustkyc_demo_documents"
                                       ? "Statutory compliance files & OCR"
-                                      : k.key === "trustgrid_deals"
+                                      : k.key === "trustkyc_demo_deals"
                                         ? "Trade contracts & milestones"
-                                        : k.key === "trustgrid_audit_logs"
+                                        : k.key === "trustkyc_demo_audit_logs"
                                           ? "Immutable audit trail"
                                           : "System notifications"}
                           </td>
@@ -2033,7 +2034,7 @@ export default function DocumentationPage() {
               <div className="rounded-2xl border border-border bg-card p-6 space-y-4 text-xs text-muted-foreground">
                 <p>
                   To convey institutional credibility, regulatory compliance, and legal authority,
-                  TrustGrid strictly enforces
+                  TrustKYC strictly enforces
                   <strong> Times New Roman</strong> globally across every heading, body copy, form
                   input, button, table, badge, and modal.
                 </p>
@@ -2159,7 +2160,7 @@ export function RoleRoute({ allowedRoles, children }) {
                   filename="src/utils/storage.js"
                   code={`export function emitDataUpdate(topic, payload = {}) {
   try {
-    const event = new CustomEvent("trustgrid:data_update", {
+    const event = new CustomEvent("trustkyc:data_update", {
       detail: { topic, payload, timestamp: new Date().toISOString() },
     });
     window.dispatchEvent(event);
@@ -2221,7 +2222,7 @@ export function updateDocument(docId, updatedFields) {
 
               <div className="rounded-2xl border border-border bg-card p-6 space-y-4 text-xs text-muted-foreground">
                 <p>
-                  Because TrustGrid contains zero backend servers or databases, it can be deployed
+                  Because TrustKYC contains zero backend servers or databases, it can be deployed
                   directly to any static CDN. To ensure client-side React Router DOM routing
                   functions on page reload, configure SPA rewrites:
                 </p>
@@ -2288,10 +2289,10 @@ export function updateDocument(docId, updatedFields) {
                 <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300 flex items-start gap-2.5">
                   <Info className="size-4 shrink-0 mt-0.5" />
                   <span>
-                    <strong>Static Prototype Disclaimer:</strong> TrustGrid is a front-end
-                    simulation created for evaluation and onboarding demonstrations. No financial
-                    transactions are executed, and all information is stored exclusively in your
-                    local browser storage.
+                    <strong>Static Prototype Disclaimer:</strong> TrustKYC is a front-end simulation
+                    created for evaluation and onboarding demonstrations. No financial transactions
+                    are executed, and all information is stored exclusively in your local browser
+                    storage.
                   </span>
                 </div>
               </div>

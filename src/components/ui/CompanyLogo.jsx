@@ -21,7 +21,7 @@ export default function CompanyLogo({ size = "md", to, className = "" }) {
             isLg ? "text-xl" : isSm ? "text-sm" : "text-base"
           }`}
         >
-          Trust<span className="text-primary">Grid</span>
+          Trust<span className="text-primary">KYC</span>
         </div>
         {!isSm && (
           <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted-foreground">

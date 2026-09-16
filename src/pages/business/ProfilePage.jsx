@@ -34,10 +34,10 @@ export default function ProfilePage() {
   if (!b && authBusiness) {
     b = {
       id: authBusiness._id,
-      name: authBusiness.tradeName || authBusiness.legalName || "TrustGrid Verified Node",
+      name: authBusiness.tradeName || authBusiness.legalName || "TrustKYC Verified Node",
       industry: authBusiness.industry || "Commercial Enterprise",
       location: `${authBusiness.city || authBusiness.registeredAddress?.city || "Mumbai"}, India`,
-      website: "https://trustgrid.io",
+      website: "https://trustkyc.io",
       founded: authBusiness.incorporationDate
         ? new Date(authBusiness.incorporationDate).getFullYear()
         : "2024",
@@ -99,7 +99,7 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-2 mb-2">
                   <StatusBadge status={b.kycStatus} />
                   <span className="text-[11px] font-mono text-muted-foreground">
-                    Accredited by TrustGrid
+                    Accredited by TrustKYC
                   </span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap");
 @source "../src";
 @import "tw-animate-css";
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 @import "tailwindcss";
 
 @theme inline {
@@ -108,32 +108,55 @@
     0 1px 2px oklch(0.21 0.04 260 / 0.04), 0 8px 24px -12px oklch(0.21 0.04 260 / 0.08);
 }
 
-@layer base {
-  .dark {
-    /* Fixed dark mode variables to use standard OKLCH coordinates */
-    --background: oklch(0.14 0.02 240);
-    --foreground: oklch(0.98 0.01 240);
-    --card: oklch(0.18 0.02 240);
-    --card-foreground: oklch(0.98 0.01 240);
-    --popover: oklch(0.18 0.02 240);
-    --popover-foreground: oklch(0.98 0.01 240);
-    --primary: oklch(0.65 0.24 260);
-    --primary-foreground: oklch(0.99 0 0);
-    --secondary: oklch(0.22 0.02 240);
-    --secondary-foreground: oklch(0.98 0.01 240);
-    --muted: oklch(0.22 0.02 240);
-    --muted-foreground: oklch(0.65 0.02 240);
-    --accent: oklch(0.25 0.02 240);
-    --accent-foreground: oklch(0.98 0.01 240);
-    --border: oklch(0.26 0.02 240);
-    --input: oklch(0.24 0.02 240);
-    --ring: oklch(0.65 0.24 260);
-    --destructive: oklch(0.65 0.22 25);
-    --danger: oklch(0.65 0.22 25);
-    --success: oklch(0.65 0.18 155);
-    --warning: oklch(0.75 0.17 75);
-  }
+.dark,
+[data-theme="dark"],
+html.dark {
+  /* Complete deep enterprise dark theme tokens */
+  --background: oklch(0.14 0.02 240);
+  --foreground: oklch(0.98 0.01 240);
+  --card: oklch(0.18 0.02 240);
+  --card-foreground: oklch(0.98 0.01 240);
+  --popover: oklch(0.18 0.02 240);
+  --popover-foreground: oklch(0.98 0.01 240);
+  --primary: oklch(0.65 0.24 260);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.22 0.02 240);
+  --secondary-foreground: oklch(0.98 0.01 240);
+  --muted: oklch(0.22 0.02 240);
+  --muted-foreground: oklch(0.65 0.02 240);
+  --accent: oklch(0.25 0.02 240);
+  --accent-foreground: oklch(0.98 0.01 240);
+  --border: oklch(0.26 0.02 240);
+  --input: oklch(0.24 0.02 240);
+  --ring: oklch(0.65 0.24 260);
+  --destructive: oklch(0.65 0.22 25);
+  --danger: oklch(0.65 0.22 25);
+  --success: oklch(0.65 0.18 155);
+  --warning: oklch(0.75 0.17 75);
 
+  --chart-1: oklch(0.65 0.24 260);
+  --chart-2: oklch(0.78 0.16 75);
+  --chart-3: oklch(0.65 0.18 155);
+  --chart-4: oklch(0.65 0.22 25);
+  --chart-5: oklch(0.65 0.18 300);
+
+  --sidebar: oklch(0.16 0.02 240);
+  --sidebar-foreground: oklch(0.98 0.01 240);
+  --sidebar-primary: oklch(0.65 0.24 260);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.22 0.02 240);
+  --sidebar-accent-foreground: oklch(0.98 0.01 240);
+  --sidebar-border: oklch(0.24 0.02 240);
+  --sidebar-ring: oklch(0.65 0.24 260);
+
+  --gradient-glow:
+    radial-gradient(circle at 20% 0%, oklch(0.65 0.24 260 / 0.15), transparent 55%),
+    radial-gradient(circle at 90% 10%, oklch(0.78 0.16 75 / 0.1), transparent 55%);
+  --shadow-glow: 0 10px 40px -12px oklch(0.65 0.24 260 / 0.25);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px -12px oklch(0 0 0 / 0.6);
+}
+
+@layer base {
   * {
     border-color: var(--color-border);
   }
@@ -153,6 +176,20 @@
       100% 100%;
     background-attachment: fixed;
     font-family: "Times New Roman", Times, Georgia, serif !important;
+  }
+
+  html.dark,
+  html.dark body,
+  .dark,
+  .dark body,
+  [data-theme="dark"],
+  [data-theme="dark"] body {
+    background-color: var(--color-background) !important;
+    color: var(--color-foreground) !important;
+    background-image:
+      linear-gradient(to right, oklch(0.98 0.01 240 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.98 0.01 240 / 0.04) 1px, transparent 1px),
+      var(--gradient-glow) !important;
   }
 
   html,

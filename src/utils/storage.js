@@ -12,13 +12,13 @@ import {
 } from "../data";
 
 const STORAGE_KEYS = {
-  BUSINESSES: "trustgrid_demo_businesses",
-  DOCUMENTS: "trustgrid_demo_documents",
-  DEALS: "trustgrid_demo_deals",
-  AUDIT_LOGS: "trustgrid_demo_audit_logs",
-  NOTIFICATIONS: "trustgrid_demo_notifications",
-  AUTH_USER: "trustgrid_demo_auth_user",
-  AUTH_ROLE: "trustgrid_demo_auth_role",
+  BUSINESSES: "trustkyc_demo_businesses",
+  DOCUMENTS: "trustkyc_demo_documents",
+  DEALS: "trustkyc_demo_deals",
+  AUDIT_LOGS: "trustkyc_demo_audit_logs",
+  NOTIFICATIONS: "trustkyc_demo_notifications",
+  AUTH_USER: "trustkyc_demo_auth_user",
+  AUTH_ROLE: "trustkyc_demo_auth_role",
 };
 
 export function getStored(key, fallback) {
@@ -34,7 +34,7 @@ export function getStored(key, fallback) {
 export function setStored(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-    window.dispatchEvent(new Event("trustgrid:data_update"));
+    window.dispatchEvent(new Event("trustkyc:data_update"));
   } catch (err) {
     console.error(`Error saving localStorage key "${key}":`, err);
   }
@@ -221,6 +221,13 @@ export function addDeal(dealData) {
 export function updateDealStatus(dealId, status) {
   const deals = getDeals();
   const updated = deals.map((d) => (d.id === dealId || d._id === dealId ? { ...d, status } : d));
+  setStored(STORAGE_KEYS.DEALS, updated);
+  return updated;
+}
+
+export function deleteDeal(dealId) {
+  const deals = getDeals();
+  const updated = deals.filter((d) => d.id !== dealId && d._id !== dealId);
   setStored(STORAGE_KEYS.DEALS, updated);
   return updated;
 }

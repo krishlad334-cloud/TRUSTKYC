@@ -113,7 +113,7 @@ export default function DirectoryPage() {
       <PageHeader
         kicker="Counterparty Intelligence"
         title="Accredited Business Directory"
-        description="Search, evaluate, and verify counterparty credibility across the TrustGrid accredited business network."
+        description="Search, evaluate, and verify counterparty credibility across the TrustKYC accredited business network."
         actions={
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs text-muted-foreground">

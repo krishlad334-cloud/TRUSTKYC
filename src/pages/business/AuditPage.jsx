@@ -121,7 +121,7 @@ export default function AuditPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `trustgrid-audit-logs-${new Date().toISOString().split("T")[0]}.csv`;
+    link.download = `trustkyc-audit-logs-${new Date().toISOString().split("T")[0]}.csv`;
     link.click();
     URL.revokeObjectURL(url);
 

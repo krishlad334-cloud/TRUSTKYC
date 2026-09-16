@@ -100,8 +100,8 @@ export default function KYCPage() {
   useEffect(() => {
     getKYCDocuments();
     const handleUpdate = () => getKYCDocuments();
-    window.addEventListener("trustgrid:data_update", handleUpdate);
-    return () => window.removeEventListener("trustgrid:data_update", handleUpdate);
+    window.addEventListener("trustkyc:data_update", handleUpdate);
+    return () => window.removeEventListener("trustkyc:data_update", handleUpdate);
   }, [getKYCDocuments]);
 
   const filtered = (kycDocuments || []).filter((d) => {

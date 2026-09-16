@@ -7,8 +7,8 @@ import { initDemoStorage } from "../utils/storage";
 const AuthContext = createContext(null);
 
 const STORAGE_KEYS = {
-  USER: "trustgrid_demo_auth_user",
-  ROLE: "trustgrid_demo_auth_role",
+  USER: "trustkyc_demo_auth_user",
+  ROLE: "trustkyc_demo_auth_role",
 };
 
 export function AuthProvider({ children }) {

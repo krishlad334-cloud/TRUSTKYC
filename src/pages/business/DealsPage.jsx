@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { formatINR, businesses } from "@/data";
 import { toast } from "sonner";
-import { getDeals, addDeal, updateDealStatus } from "@/utils/storage";
+import { getDeals, addDeal, updateDealStatus, deleteDeal } from "@/utils/storage";
 
 import {
   Plus,
@@ -255,8 +255,7 @@ export default function DealsPage() {
 
   const handleDeleteDeal = (id) => {
     if (!window.confirm("Delete this deal?")) return;
-    const all = getDeals().filter((d) => d.id !== id && d._id !== id);
-    localStorage.setItem("trustgrid_demo_deals", JSON.stringify(all));
+    deleteDeal(id);
     loadDeals(activeTab);
     loadSummary();
     toast.success("Deal deleted successfully");

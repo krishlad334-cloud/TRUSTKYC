@@ -1,4 +1,4 @@
-# TrustGrid — Enterprise B2B KYC, Trust Scoring & Trade Verification Platform
+# TrustKYC — Enterprise B2B KYC, Trust Scoring & Trade Verification Platform
 
 > **100% Static Frontend-Only Interactive Demo Application**  
 > Zero external backend, Node.js server, or MongoDB dependencies required. Fully self-contained with client-side state persistence and realistic mock verification pipelines.
@@ -35,7 +35,7 @@ _Tip: Quick 1-click login buttons are directly embedded on the landing page for 
 
 ## 📖 In-App Documentation Portal
 
-TrustGrid includes a built-in interactive documentation portal accessible at [`/documentation`](/documentation) or via the top navigation bar. It features:
+TrustKYC includes a built-in interactive documentation portal accessible at [`/documentation`](/documentation) or via the top navigation bar. It features:
 
 - **System Architecture & Data Flows**
 - **Interactive Role Switcher & Credential Registry**
@@ -108,7 +108,7 @@ src/
 
 ## 🌐 Production Deployment
 
-Since TrustGrid is 100% static, it can be hosted on any static web server or CDN with standard Single-Page App (SPA) rewrite rules:
+Since TrustKYC is 100% static, it can be hosted on any static web server or CDN with standard Single-Page App (SPA) rewrite rules:
 
 ### Vercel (`vercel.json`)
 
@@ -123,4 +123,5 @@ Since TrustGrid is 100% static, it can be hosted on any static web server or CDN
 ```
 /*    /index.html   200
 ```
+
 # TRUSTKYC

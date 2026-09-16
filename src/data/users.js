@@ -36,7 +36,7 @@ export const demoUsers = [
     scope: "SYSTEM",
     title: "Principal Compliance Officer & Risk Supervisor",
     businessId: "biz-system",
-    businessName: "TrustGrid Compliance Operations",
+    businessName: "TrustKYC Compliance Operations",
     avatar: "SP",
     phone: "+91 98110 54321",
     joinedAt: "2023-08-01",

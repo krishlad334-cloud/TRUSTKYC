@@ -63,8 +63,8 @@ export function AppHeader({ title, subtitle, menuData = DEFAULT_MENU_DATA, onMen
       loadNotifications();
     };
 
-    window.addEventListener("trustgrid:data_update", handleDataUpdate);
-    return () => window.removeEventListener("trustgrid:data_update", handleDataUpdate);
+    window.addEventListener("trustkyc:data_update", handleDataUpdate);
+    return () => window.removeEventListener("trustkyc:data_update", handleDataUpdate);
   }, [loadNotifications]);
 
   const handleMarkAsRead = (notificationId) => {

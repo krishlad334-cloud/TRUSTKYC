@@ -75,8 +75,8 @@ export default function SharedPage() {
     pinProtected: true,
   });
 
-  const myProfileId = business?._id || "tg-enterprise-node";
-  const myTradeName = business?.tradeName || business?.legalName || "TrustGrid Verified Enterprise";
+  const myProfileId = business?._id || "tkyc-enterprise-node";
+  const myTradeName = business?.tradeName || business?.legalName || "TrustKYC Verified Enterprise";
   const publicUrl = `${window.location.origin}/profile/${myProfileId}`;
 
   const copyToClipboard = (text, id) => {

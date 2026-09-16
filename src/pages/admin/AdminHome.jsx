@@ -29,8 +29,8 @@ export default function AdminHome() {
   useEffect(() => {
     loadData();
     const handleUpdate = () => loadData();
-    window.addEventListener("trustgrid:data_update", handleUpdate);
-    return () => window.removeEventListener("trustgrid:data_update", handleUpdate);
+    window.addEventListener("trustkyc:data_update", handleUpdate);
+    return () => window.removeEventListener("trustkyc:data_update", handleUpdate);
   }, []);
 
   const pending = documents.filter((d) => d.status?.toLowerCase() === "pending").length;

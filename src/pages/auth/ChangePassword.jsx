@@ -187,7 +187,7 @@ export default function ChangePassword() {
           </div>
 
           <div className="text-center mt-6">
-            <p className="text-xs text-muted-foreground">TrustGrid Identity & Access Governance</p>
+            <p className="text-xs text-muted-foreground">TrustKYC Identity & Access Governance</p>
           </div>
         </div>
       </main>

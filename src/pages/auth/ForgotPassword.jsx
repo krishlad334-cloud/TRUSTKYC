@@ -160,7 +160,7 @@ export default function ForgotPassword() {
 
           <div className="text-center mt-6">
             <p className="text-xs text-muted-foreground">
-              Protected by TrustGrid Enterprise Security • 256-bit TLS Encrypted
+              Protected by TrustKYC Enterprise Security • 256-bit TLS Encrypted
             </p>
           </div>
         </div>
