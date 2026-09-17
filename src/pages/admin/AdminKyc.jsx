@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Panel, StatusBadge } from "@/components/ui-kit";
+import { Panel, StatusBadge, PageHeader } from "@/components/ui-kit";
 import {
   Check,
   X,
@@ -48,27 +48,35 @@ export default function AdminKyc() {
         _id: d._id || d.id,
         id: d.id || d._id,
         type: d.type || "GST_CERTIFICATE",
+        documentType: d.documentType || d.type || "GST Certificate",
         status: (d.status || "PENDING").toUpperCase(),
         businessName: d.businessName || "Helios Trade Networks Pvt Ltd",
         businessId: {
           _id: d.businessId || "biz-001",
           name: d.businessName || "Helios Trade Networks Pvt Ltd",
+          businessName: d.businessName || "Helios Trade Networks Pvt Ltd",
           tradeName: d.businessName || "Helios Trade Networks",
           cin: "U74999MH2018PLC312841",
           gstin: "27AAACH1234A1Z9",
         },
+        uploadedBy: d.uploadedBy || { firstName: "Compliance", lastName: "Officer" },
+        fileName: d.fileName || d.name || `${d.type || "document"}.pdf`,
+        fileSize: typeof d.size === "string" ? 2400000 : d.size || 2400000,
+        fileUrl: d.fileUrl || "/sample-doc.pdf",
+        version: d.version || "1.0",
         file: {
-          name: d.name || `${d.type}.pdf`,
+          name: d.fileName || d.name || `${d.type || "document"}.pdf`,
           url: d.fileUrl || "/sample-doc.pdf",
           size: d.size || "2.1 MB",
         },
         ocrExtractedData: d.extractedData ||
           d.metaData || {
             GSTIN: "27AAACH1234A1Z9",
-            "Legal Name": "Helios Trade Networks Pvt Ltd",
+            "Legal Name": d.businessName || "Helios Trade Networks Pvt Ltd",
           },
+        metaData: d.extractedData || d.metaData || {},
         ocrConfidence: d.ocrConfidence || 98.6,
-        createdAt: d.uploadedAt || new Date().toISOString(),
+        createdAt: d.uploadedAt || d.createdAt || new Date().toISOString(),
         updatedAt: d.verifiedAt || new Date().toISOString(),
         rejectionReason: d.rejectionReason || null,
         notes: d.notes || [],
@@ -78,10 +86,10 @@ export default function AdminKyc() {
       setPaginate({
         page: currentPage,
         limit: 10,
-        totalPages: 1,
+        totalPages: Math.max(1, Math.ceil(normalized.length / 10)),
         totalRecords: normalized.length,
-        hasNextPage: false,
-        hasPrevPage: false,
+        hasNextPage: currentPage < Math.ceil(normalized.length / 10),
+        hasPrevPage: currentPage > 1,
       });
     } catch (err) {
       console.error(err);
@@ -93,6 +101,9 @@ export default function AdminKyc() {
 
   useEffect(() => {
     loadReviewQueue(page);
+    const handleUpdate = () => loadReviewQueue(page);
+    window.addEventListener("trustkyc:data_update", handleUpdate);
+    return () => window.removeEventListener("trustkyc:data_update", handleUpdate);
   }, [page, loadReviewQueue]);
 
   const loadDocumentDetails = (documentId) => {

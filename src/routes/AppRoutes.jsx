@@ -15,7 +15,7 @@ import DocumentationLayout from "../layouts/DocumentationLayout";
 import Landing from "../pages/auth/Landing";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
-import VerifyEmail from "../pages/auth/Verifyemail";
+import VerifyEmail from "../pages/auth/VerifyEmail";
 import ResetPassword from "../pages/auth/ResetPassword";
 import ChangePassword from "../pages/auth/ChangePassword";
 

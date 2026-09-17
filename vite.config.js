@@ -5,4 +5,17 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), tsconfigPaths()],
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-charts": ["recharts"],
+          "vendor-pdf": ["jspdf"],
+          "vendor-icons": ["lucide-react"],
+        },
+      },
+    },
+  },
 });

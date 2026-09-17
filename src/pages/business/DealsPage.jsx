@@ -170,10 +170,13 @@ export default function DealsPage() {
   const loadSummary = useCallback(() => {
     const all = getDeals();
     setSummary({
-      incomingDeals: all.filter((d) => d.type === "incoming").length,
+      incomingDeals: all.filter(
+        (d) => d.type === "incoming" || d.status === "draft" || d.status === "pending",
+      ).length,
       activeDeals: all.filter((d) => d.status === "active").length,
-      completedDeals: all.filter((d) => d.status === "completed").length,
+      completedDeals: all.filter((d) => d.status === "completed" || d.status === "resolved").length,
       disputedDeals: all.filter((d) => d.status === "disputed").length,
+      sentDeals: all.filter((d) => d.type === "outgoing" || d.type === "sent").length,
     });
   }, []);
 
@@ -187,9 +190,15 @@ export default function DealsPage() {
         if (type === "disputed") {
           filtered = all.filter((d) => d.status === "disputed");
         } else if (type === "incoming") {
-          filtered = all.filter((d) => d.type === "incoming" || d.status === "active");
-        } else if (type === "outgoing") {
-          filtered = all.filter((d) => d.type === "outgoing");
+          filtered = all.filter(
+            (d) => d.type === "incoming" || d.status === "draft" || d.status === "pending",
+          );
+        } else if (type === "sent") {
+          filtered = all.filter((d) => d.type === "outgoing" || d.type === "sent");
+        } else if (type === "active") {
+          filtered = all.filter((d) => d.status === "active");
+        } else if (type === "completed") {
+          filtered = all.filter((d) => d.status === "completed" || d.status === "resolved");
         }
 
         setDeals(filtered.map(normalizeDeal));
@@ -225,19 +234,30 @@ export default function DealsPage() {
   useEffect(() => {
     loadCounterparties();
     loadSummary();
-  }, [loadCounterparties, loadSummary]);
+    const handleUpdate = () => {
+      loadDeals(activeTab);
+      loadSummary();
+    };
+    window.addEventListener("trustkyc:data_update", handleUpdate);
+    return () => window.removeEventListener("trustkyc:data_update", handleUpdate);
+  }, [loadCounterparties, loadSummary, loadDeals, activeTab]);
 
   const handleCreateDeal = (payload) => {
-    const matchedBiz = businesses.find((b) => b.id === payload.counterparty);
+    const matchedBiz = businesses.find(
+      (b) => b.id === payload.counterparty || b._id === payload.counterparty,
+    );
     addDeal({
       title: payload.name,
       name: payload.name,
-      counterparty: matchedBiz?.name || "Enterprise Counterparty",
+      counterparty: matchedBiz?.tradeName || matchedBiz?.name || "Enterprise Counterparty",
       counterpartyId: payload.counterparty,
       counterpartyGstin: matchedBiz?.gstin || "27AABCV5678B1Z3",
-      value: Number(payload.value),
-      amount: Number(payload.value),
+      value: Number(payload.value) || 0,
+      amount: Number(payload.value) || 0,
       description: payload.description,
+      type: "outgoing",
+      status: "active",
+      createdAt: new Date().toISOString(),
     });
 
     loadDeals(activeTab);
@@ -311,7 +331,7 @@ export default function DealsPage() {
 
   useEffect(() => {
     loadSummary();
-  }, [deals]);
+  }, [deals, loadSummary]);
 
   const openEditModal = async (id) => {
     const deal = await loadDealById(id);
@@ -584,6 +604,84 @@ function DealCard({
   );
 }
 
+function DealActions({
+  activeTab,
+  deal,
+  completionState,
+  business,
+  onAccept,
+  onReject,
+  onCancel,
+  onEdit,
+  onView,
+  onDelete,
+  onComplete,
+  onDispute,
+  onResolve,
+}) {
+  const isDisputed = deal.status === "disputed";
+  const isPending =
+    deal.status === "pending" || deal.status === "draft" || activeTab === "incoming";
+  const isActive = deal.status === "active";
+  const isCompleted = deal.status === "completed" || deal.status === "resolved";
+
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap justify-end">
+      <Btn icon={ExternalLink} variant="ghost" onClick={() => onView(deal.id)}>
+        Details
+      </Btn>
+
+      {isPending && activeTab === "incoming" && (
+        <>
+          <Btn icon={ThumbsUp} variant="solid-success" onClick={() => onAccept(deal.id)}>
+            Accept
+          </Btn>
+          <Btn icon={ThumbsDown} variant="ghost-danger" onClick={() => onReject(deal.id)}>
+            Reject
+          </Btn>
+        </>
+      )}
+
+      {isActive && (
+        <>
+          <Btn icon={CheckCircle2} variant="solid-success" onClick={() => onComplete(deal.id)}>
+            Mark Done
+          </Btn>
+          <Btn icon={AlertOctagon} variant="ghost-danger" onClick={() => onDispute(deal)}>
+            Dispute
+          </Btn>
+          <Btn icon={Pencil} variant="ghost" onClick={() => onEdit(deal.id)}>
+            Edit
+          </Btn>
+        </>
+      )}
+
+      {isDisputed && (
+        <Btn icon={BadgeCheck} variant="solid-success" onClick={() => onResolve(deal)}>
+          Resolve
+        </Btn>
+      )}
+
+      {activeTab === "sent" && deal.status !== "completed" && deal.status !== "disputed" && (
+        <>
+          <Btn icon={Pencil} variant="ghost" onClick={() => onEdit(deal.id)}>
+            Edit
+          </Btn>
+          <Btn icon={XCircle} variant="ghost-danger" onClick={() => onCancel(deal.id)}>
+            Cancel
+          </Btn>
+        </>
+      )}
+
+      {(isCompleted || deal.status === "cancelled" || deal.status === "rejected") && (
+        <Btn icon={XCircle} variant="ghost-danger" onClick={() => onDelete(deal.id)}>
+          Remove
+        </Btn>
+      )}
+    </div>
+  );
+}
+
 function DisputeBanner({ reason }) {
   return (
     <div className="mx-5 mb-3 flex items-start gap-2.5 p-3.5 rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400">
@@ -789,8 +887,8 @@ function Select({ label, options, ...props }) {
       <select className={inputCls} {...props}>
         <option value="">Select counterparty</option>
         {options.map((cp) => (
-          <option key={cp._id} value={cp._id}>
-            {cp.tradeName || cp.legalName}
+          <option key={cp.id || cp._id} value={cp.id || cp._id}>
+            {cp.tradeName || cp.legalName || cp.name}
           </option>
         ))}
       </select>
@@ -955,7 +1053,7 @@ function ResolveDisputeModal({ deal, onClose, onSubmit }) {
     e.preventDefault();
     if (!note.trim()) return toast.error("Please enter a resolution note");
     setLoading(true);
-    await onSubmit(deal.disputeId, note.trim());
+    await onSubmit(deal.id, note.trim());
     setLoading(false);
   };
 

@@ -77,6 +77,7 @@ const validators = {
 
 function bytesToHuman(b) {
   if (!b && b !== 0) return "—";
+  if (typeof b === "string") return b;
   if (b < 1024) return `${b} B`;
   if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
   return `${(b / 1024 / 1024).toFixed(2)} MB`;
@@ -105,10 +106,21 @@ export default function KYCPage() {
   }, [getKYCDocuments]);
 
   const filtered = (kycDocuments || []).filter((d) => {
-    const matchesTab = tab === "All" ? true : d.documentType === tabsMapping[tab];
+    const targetKey = tabsMapping[tab];
+    const matchesTab =
+      tab === "All"
+        ? true
+        : d.type === targetKey ||
+          d.documentType === targetKey ||
+          d.documentType === inverseTabsMapping[targetKey] ||
+          (d.type && d.type.toUpperCase().includes(tab)) ||
+          (d.documentType && d.documentType.toUpperCase().includes(tab));
+
+    const fileName = d.fileName || d.name || "";
+    const docTypeName = d.documentType || d.type || "";
     const matchesSearch = search.trim()
-      ? (d.fileName || "").toLowerCase().includes(search.toLowerCase()) ||
-        (d.documentType || "").toLowerCase().includes(search.toLowerCase())
+      ? fileName.toLowerCase().includes(search.toLowerCase()) ||
+        docTypeName.toLowerCase().includes(search.toLowerCase())
       : true;
     return matchesTab && matchesSearch;
   });
@@ -121,14 +133,160 @@ export default function KYCPage() {
     }) || [];
 
   const handleReuploadAction = (backendType) => {
-    const matchedType = inverseTabsMapping[backendType] || "GST Certificate";
+    const matchedType =
+      inverseTabsMapping[backendType] ||
+      (docTypeOptions.includes(backendType) ? backendType : "GST Certificate");
     setDocType(matchedType);
     setUploadOpen(true);
   };
 
+  // Statutory KYC Pillars Calculation
+  const pillars = [
+    {
+      id: "GST_CERTIFICATE",
+      name: "GST Registration",
+      docName: "GST Certificate",
+      tabKey: "GST",
+      doc: kycDocuments.find(
+        (d) => d.type === "GST_CERTIFICATE" || d.documentType === "GST Certificate",
+      ),
+    },
+    {
+      id: "PAN_CARD",
+      name: "Corporate PAN",
+      docName: "PAN Card",
+      tabKey: "PAN",
+      doc: kycDocuments.find((d) => d.type === "PAN_CARD" || d.documentType === "PAN Card"),
+    },
+    {
+      id: "INCORPORATION_CERTIFICATE",
+      name: "Certificate of Inc.",
+      docName: "Incorporation Certificate",
+      tabKey: "INCORPORATION",
+      doc: kycDocuments.find(
+        (d) =>
+          d.type === "INCORPORATION_CERTIFICATE" || d.documentType === "Incorporation Certificate",
+      ),
+    },
+    {
+      id: "BANK_PROOF",
+      name: "Bank Verification",
+      docName: "Bank Proof",
+      tabKey: "BANK",
+      doc: kycDocuments.find((d) => d.type === "BANK_PROOF" || d.documentType === "Bank Proof"),
+    },
+  ];
+
+  const verifiedCount = pillars.filter((p) => p.doc && p.doc.status === "verified").length;
+  const kycPercent = Math.round((verifiedCount / pillars.length) * 100);
+
   return (
     <>
       <div className="space-y-6">
+        {/* KYC Compliance Status & Four Pillars Checklist */}
+        <div className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-xs space-y-5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="size-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 text-primary">
+                <ShieldCheck className="size-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-base font-bold text-foreground font-display">
+                    Statutory KYC Verification Docket
+                  </h2>
+                  <span
+                    className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
+                      verifiedCount === 4
+                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                        : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                    }`}
+                  >
+                    {verifiedCount === 4
+                      ? "Level 3 Fully Verified"
+                      : `${verifiedCount}/4 Pillars Verified`}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Deposit official regulatory certifications for automated AI OCR extraction and
+                  sovereign verification.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                  KYC Readiness
+                </p>
+                <p className="text-sm font-bold font-mono text-foreground">
+                  {kycPercent}% Complete
+                </p>
+              </div>
+              <div className="w-24 h-2 rounded-full bg-muted overflow-hidden border border-border">
+                <div
+                  className="h-full bg-primary transition-all duration-500 rounded-full"
+                  style={{ width: `${kycPercent}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 4 Pillars Card Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+            {pillars.map((pillar) => {
+              const doc = pillar.doc;
+              const status = doc?.status || "missing";
+
+              return (
+                <div
+                  key={pillar.id}
+                  onClick={() => {
+                    if (doc) {
+                      setTab(pillar.tabKey);
+                    } else {
+                      setDocType(pillar.docName);
+                      setUploadOpen(true);
+                    }
+                  }}
+                  className="p-3.5 rounded-xl border border-border bg-muted/20 hover:bg-muted/40 transition-all cursor-pointer group flex flex-col justify-between"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
+                      {pillar.name}
+                    </span>
+                    {status === "verified" ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                        <CheckCircle2 className="size-3" /> Verified
+                      </span>
+                    ) : status === "pending" ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                        <Loader2 className="size-3 animate-spin" /> In Review
+                      </span>
+                    ) : status === "rejected" ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-rose-600 dark:text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20">
+                        <AlertTriangle className="size-3" /> Rejected
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-md border border-border">
+                        <Plus className="size-3" /> Required
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground font-mono">
+                    <span className="truncate max-w-[130px]">
+                      {doc ? doc.name || doc.fileName || "Uploaded" : "Not Deposited"}
+                    </span>
+                    <span className="text-primary font-sans font-medium text-[10px] underline">
+                      {doc ? "View" : "Upload"}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Top Control Bar */}
         <div className="rounded-2xl border border-border bg-card p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Tabs */}
@@ -175,7 +333,7 @@ export default function KYCPage() {
                 setDocType("GST Certificate");
                 setUploadOpen(true);
               }}
-              className="btn-primary text-xs font-semibold py-2 px-3.5 shadow-sm shadow-primary/20 shrink-0 inline-flex items-center gap-1.5"
+              className="btn-primary text-xs font-semibold py-2 px-3.5 shadow-sm shadow-primary/20 shrink-0 inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Plus className="size-4" />
               <span>Upload Document</span>
@@ -212,12 +370,16 @@ export default function KYCPage() {
                 action={
                   <button
                     onClick={() => {
-                      setDocType("GST Certificate");
+                      setDocType(
+                        tab !== "All" && inverseTabsMapping[tabsMapping[tab]]
+                          ? inverseTabsMapping[tabsMapping[tab]]
+                          : "GST Certificate",
+                      );
                       setUploadOpen(true);
                     }}
-                    className="btn-primary text-xs font-semibold py-2 px-4 shadow-sm"
+                    className="btn-primary text-xs font-semibold py-2 px-4 shadow-sm cursor-pointer"
                   >
-                    <Plus className="size-3.5 mr-1" /> Upload First Document
+                    <Plus className="size-3.5 mr-1" /> Upload Document
                   </button>
                 }
               />
@@ -238,7 +400,11 @@ export default function KYCPage() {
 
                 <tbody className="divide-y divide-border/60">
                   {filtered.map((d, index) => (
-                    <DocRow key={d?._id || index} d={d} onReupload={handleReuploadAction} />
+                    <DocRow
+                      key={d?._id || d?.id || index}
+                      d={d}
+                      onReupload={handleReuploadAction}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -268,21 +434,32 @@ function DocRow({ d, onReupload }) {
 
   if (!d) return null;
 
+  const docTitle = d.fileName || d.name || "Compliance Document";
+  const docTypeLabel =
+    d.documentType ||
+    inverseTabsMapping[d.type] ||
+    (d.type ? d.type.replace(/_/g, " ") : "KYC Artifact");
+
   const handleView = () => {
     setPreviewData({
       ...d,
+      fileName: docTitle,
+      documentType: docTypeLabel,
+      metaData: d.extractedData || d.metaData || {},
       previewUrl: d.fileUrl || "/sample-doc.pdf",
     });
     setPreviewOpen(true);
   };
 
-  const handleDownload = (openInTab = false) => {
-    toast.success(`Exporting ${d.name || d.documentType || "document"}`, {
+  const handleDownload = () => {
+    setDownloading(true);
+    toast.success(`Exporting ${docTitle}`, {
       description: "Generated verifiable PDF checksum seal.",
     });
-    if (openInTab) {
+    setTimeout(() => {
+      setDownloading(false);
       window.open(d.fileUrl || "/sample-doc.pdf", "_blank");
-    }
+    }, 400);
   };
 
   return (
@@ -294,14 +471,8 @@ function DocRow({ d, onReupload }) {
               <FileText className="size-4" />
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-foreground text-xs truncate max-w-xs">
-                {d.fileName || "Document"}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                {d.documentType
-                  ? inverseTabsMapping[d.documentType] || d.documentType
-                  : "KYC Artifact"}
-              </p>
+              <p className="font-semibold text-foreground text-xs truncate max-w-xs">{docTitle}</p>
+              <p className="text-[10px] text-muted-foreground font-mono mt-0.5">{docTypeLabel}</p>
             </div>
           </div>
         </td>
@@ -329,7 +500,7 @@ function DocRow({ d, onReupload }) {
               <Eye className="size-3.5" />
             </button>
             <button
-              onClick={() => handleDownload()}
+              onClick={handleDownload}
               disabled={downloading}
               title="Download Artifact"
               className="size-8 rounded-lg border border-border bg-card hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer disabled:opacity-50"
@@ -341,7 +512,7 @@ function DocRow({ d, onReupload }) {
               )}
             </button>
             <button
-              onClick={() => onReupload(d.documentType)}
+              onClick={() => onReupload(d.documentType || d.type)}
               title="Re-upload or Update Version"
               className="size-8 rounded-lg border border-border bg-card hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer"
             >
@@ -459,15 +630,19 @@ function UploadModal({ onClose, docType, setDocType }) {
       await new Promise((r) => setTimeout(r, 400));
 
       addDocument({
-        name: selectedFile?.name || `${docType}.pdf`,
+        name: selectedFile?.name || `${docType.replace(/\s+/g, "_")}.pdf`,
+        fileName: selectedFile?.name || `${docType.replace(/\s+/g, "_")}.pdf`,
         type: tabsMapping[docType] || "GST_CERTIFICATE",
         documentType: docType,
         extractedData: documentData,
+        metaData: documentData,
         size: selectedFile?.size
           ? `${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB`
           : "1.9 MB",
         status: "pending",
         businessName: "Helios Trade Networks Pvt Ltd",
+        businessId: "biz-001",
+        uploadedAt: new Date().toISOString(),
       });
 
       toast.success("Document submitted into verification docket");

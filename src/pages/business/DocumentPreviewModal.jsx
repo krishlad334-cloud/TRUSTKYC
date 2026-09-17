@@ -62,10 +62,12 @@ function StatusIcon({ status }) {
 function DocumentPreviewModal({ open, onClose, data }) {
   if (!open || !data) return null;
 
-  const meta = data.metaData || {};
+  const meta = data.extractedData || data.metaData || {};
   const metaEntries = Object.entries(meta);
   const isPdf = data.previewUrl && /\.pdf(\?.*)?$/i.test(data.previewUrl);
   const style = statusStyle(data.status);
+  const fileName = data.fileName || data.name || "Compliance Document";
+  const fileSize = data.fileSize || data.size || "2.1 MB";
 
   const modal = (
     <div
@@ -84,7 +86,7 @@ function DocumentPreviewModal({ open, onClose, data }) {
                 Document Inspection
               </h2>
               <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-muted text-muted-foreground border border-border">
-                {formatKey(data.documentType || "Document")}
+                {formatKey(data.documentType || data.type || "Document")}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -155,12 +157,17 @@ function DocumentPreviewModal({ open, onClose, data }) {
               </h3>
               <div className="space-y-2.5 text-xs">
                 {[
-                  ["File Name", data.fileName],
-                  ["File Size", data.fileSize ? `${(data.fileSize / 1024).toFixed(2)} KB` : null],
+                  ["File Name", fileName],
+                  [
+                    "File Size",
+                    typeof fileSize === "number" ? `${(fileSize / 1024).toFixed(2)} KB` : fileSize,
+                  ],
                   ["Registry Version", data.version ? `v${data.version}` : "v1.0"],
                   [
                     "Uploaded At",
-                    data.createdAt ? new Date(data.createdAt).toLocaleString() : null,
+                    data.uploadedAt || data.createdAt
+                      ? new Date(data.uploadedAt || data.createdAt).toLocaleString()
+                      : null,
                   ],
                   [
                     "Verified At",

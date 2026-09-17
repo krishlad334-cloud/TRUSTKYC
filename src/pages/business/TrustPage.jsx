@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { ChevronDown, AlertTriangle } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -56,11 +56,7 @@ export default function TrustPage() {
   const [trustScore, setTrustScore] = useState(defaultScore);
   const [history, setHistory] = useState([]);
 
-  useEffect(() => {
-    fetchTrustScore();
-  }, [business]);
-
-  const fetchTrustScore = () => {
+  const fetchTrustScore = useCallback(() => {
     try {
       setLoading(true);
       const score = business?.trustScore || {
@@ -83,7 +79,11 @@ export default function TrustPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [business, trustHistory]);
+
+  useEffect(() => {
+    fetchTrustScore();
+  }, [fetchTrustScore]);
 
   const trustBreakdown = useMemo(
     () => [
